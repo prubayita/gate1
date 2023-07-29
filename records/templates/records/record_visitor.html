@@ -1,0 +1,45 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form method="post" action="{% url 'records:record_visitor' %}">
+        {% csrf_token %}
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name" id="first_name" required>
+        <br>
+        <label for="surname">Surname:</label>
+        <input type="text" name="surname" id="surname" required>
+        <br>
+        <label for="organization">Organization:</label>
+        <input type="text" name="organization" id="organization" required>
+        <br>
+        <label for="position">Position:</label>
+        <input type="text" name="position" id="position" required>
+        <br>
+        <label for="country_of_origin">Country of Origin:</label>
+        <input type="text" name="country_of_origin" id="country_of_origin" required>
+        <br>
+        <label for="id_passport_nbr">ID/Passport Number:</label>
+        <input type="text" name="id_passport_nbr" id="id_passport_nbr" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required>
+        <br>
+        <label for="address">Address:</label>
+        <textarea name="address" id="address" required></textarea>
+        <br>
+        <label for="mobile_phone">Mobile Phone:</label>
+        <input type="text" name="mobile_phone" id="mobile_phone" required>
+        <br>
+        <label for="devices">Devices:</label>
+        <input type="text" name="devices" id="devices" required>
+        <br>
+        <input type="submit" value="Submit">
+      </form>
+      
+</body>
+</html>

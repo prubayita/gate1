@@ -1,0 +1,20 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for visitor in visitors %}
+    <div>
+        <span>{{ visitor.first_name }} {{ visitor.surname }}</span>
+        <button class="checkout-btn" data-visitor-id="{{ visitor.id }}">Check Out</button>
+    </div>
+    {% empty %}
+    <p>No results found.</p>
+    {% endfor %}
+    
+
+</body>
+</html>
+
