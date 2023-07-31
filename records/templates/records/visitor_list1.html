@@ -169,7 +169,8 @@
                     {% for visitor in waitinglist %}        
                     <tr>
                         <td class="min-width">
-                          <p><a href="#" class="open-form-popup" data-visitor-id="{{ visitor.id_passport_nbr }}">{{ visitor.first_name }} {{ visitor.surname }}</a></p>                        </td>
+                        <p><a href="details/{{ visitor.id_passport_nbr }}">{{ visitor.first_name }} {{ visitor.surname }}</a></p>
+                        </td>
                         <td class="min-width">
                             <p>{{ visitor.id_passport_nbr }}</p>
                         </td>
@@ -204,48 +205,6 @@
     </div>
     </div>
 </section>
-<div id="formPopup" class="modal" tabindex="-1">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title">Approve Visitor</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-              <!-- Approval form -->
-              <form id="approvalForm" method="POST">
-                  {% csrf_token %}
-                  <!-- Additional fields for data collection -->
-                  <div class="mb-3">
-                      <label for="purpose" class="form-label">Purpose:</label>
-                      <input type="text" name="purpose" class="form-control">
-                  </div>
-                  <div class="mb-3">
-                      <label for="comment" class="form-label">Comment:</label>
-                      <textarea name="comment" class="form-control"></textarea>
-                  </div>
-                  <div class="mb-3">
-                      <label for="devices" class="form-label">Devices:</label>
-                      <textarea name="devices" class="form-control"></textarea>
-                  </div>
-                  <div class="mb-3">
-                      <label for="card" class="form-label">Card:</label>
-                      <select name="card" class="form-select">
-                          <option value="">Select Card</option>
-                          {% for card in cards %}
-                              <option value="{{ card.id }}">{{ card.name }}</option>
-                          {% endfor %}
-                      </select>
-                  </div>
-              </form>
-          </div>
-          <div class="modal-footer">
-              <!-- Submit button -->
-              <button type="submit" form="approvalForm" class="btn btn-primary">Approve</button>
-          </div>
-      </div>
-  </div>
-</div>
 </main>
 
 {% endblock content %}

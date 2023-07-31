@@ -159,38 +159,48 @@
                         <th><h6>Email</h6></th>
                         <th><h6>Phone Number</h6></th>
                         <th><h6>Organization</h6></th>
-                        <th><h6>Country</h6></th>
-                        <th><h6></h6></th>
+                        <th><h6>Card Number</h6></th>
+                        <th><h6>Time In</h6></th>
+                        <th><h6>Time Out</h6></th>
                     </tr>
                     <!-- end table row-->
                     </thead>
                     <tbody>
                     {% include 'partials/alerts.html' %}
-                    {% for visitor in movements %}        
+                    {% for movement in movements %}        
                     <tr>
-                        
                         <td class="min-width">
-                            <p>{{ visitor.visitor }}</p>
+                            <p>{{ movement.visitor.first_name }}</p>
                         </td>
                         <td class="min-width">
-                        <p>{{ visitor.purpose }}</p>
+                        <p>{{ movement.visitor.id_passport_nbr}}</p>
                         </td>
                         <td class="min-width">
-                        <p>{{ visitor.time_in }}</p>
+                        <p>{{ movement.visitor.email }}</p>
                         </td>
                         <td class="min-width">
-                            <p>{{ visitor.time_out }}</p>
+                            <p>{{ movement.visitor.mobile_phone }}</p>
                         </td>
                         <td class="min-width">
-                          <p>{{ visitor.devices }}</p>
-                      </td>
-                        <td>                    
-                          <form method="post" action="#">
+                          <p>{{ movement.visitor.organization }}</p>
+                        </td>
+                        <td class="min-width">
+                          <p>{{ movement.card.name }}</p>
+                        </td>
+                        <td class="min-width">
+                          <p>{{ movement.time_in }}</p>
+                        </td>
+                        <td>
+                          {% if movement.time_out %}
+                          <p>{{ movement.time_out }}</p>
+                              <!-- <h6 class="main-btn success-btn rounded-full btn-hover btn-sm">Checked out</h6> -->
+                          {% else %}
+                          <form method="post" action="{% url 'records:check_out_visitor' visitor_id=movement.visitor.id_passport_nbr %}">
                               {% csrf_token %}
-                              <input type="submit" class="main-btn active-btn rounded-full btn-hover btn-sm" value="Approve">
+                              <input type="submit" class="main-btn active-btn rounded-full btn-hover btn-sm" value="Check Out">
                           </form>
+                          {% endif %} 
                         </td>
-                        
                     </tr>
                     {% endfor %}
                    

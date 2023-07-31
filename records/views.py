@@ -58,12 +58,13 @@ def record_visitor(request):
 
 @login_required
 def check_out_visitor(request, visitor_id):
-    visitor = Visitor.objects.get(pk=visitor_id)
-    if visitor.time_out is None:
-        visitor.time_out = datetime.now()
-        visitor.save()
-        messages.success(request, 'Visitor checked out successfully.')
-    return redirect('records:visitors')
+    # movement = Movement.objects.get(pk=visitor_id)
+    movement = get_object_or_404(Movement, visitor__id_passport_nbr=visitor_id, time_out__isnull=True)
+    # if movement.time_out is None:
+    movement.time_out = datetime.now()
+    movement.save()
+    messages.success(request, 'Visitor checked out successfully.')
+    return redirect('records:movements')
 
 @login_required
 # @group_required('Supervisor')
@@ -124,7 +125,7 @@ def details(request, visitor_id):
     context = {
         'detailedVisitor': detailedVisitor,
     }
-    return render(request, 'records/details.html', context)
+    return render(request, 'records/visitor_list.html', context)
 #   detailedVisitor = WaitingList.objects.get(id_passport_nbr=id)
 #   template = loader.get_template('records/details.html')
 #   context = {
@@ -169,7 +170,16 @@ def approve_visitor(request, visitor_id):
 
 
 def movements(request):
-    movements=Movement.objects.all().values()
-    template = loader.get_template('records/movement.html')
-    context = {'movements': movements }
-    return HttpResponse(template.render(context, request))
+    # movements = Movement.objects.all()
+    checked_in_visitors = Movement.objects.filter(time_out__isnull=True)
+    checked_out_visitors = Movement.objects.exclude(time_out__isnull=True)
+
+    # Order checked-in visitors by most recent first
+    checked_in_visitors = checked_in_visitors.order_by('-id')
+
+    # Order checked-out visitors by most recent checked-out time
+    checked_out_visitors = checked_out_visitors.order_by('-time_out')
+
+    movements = list(checked_in_visitors) + list(checked_out_visitors)
+    context = {'movements': movements}
+    return render(request, 'records/movement.html', context)

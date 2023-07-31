@@ -39,7 +39,8 @@ class Card(models.Model):
 
 
 class Movement(models.Model):
-    visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE, to_field='id_passport_nbr')
+    # visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE, to_field='id_passport_nbr')
+    visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE, to_field='id_passport_nbr', related_name='movements')
     purpose = models.CharField(max_length=200)
     time_in = models.DateTimeField()
     time_out = models.DateTimeField(blank=True, null=True)
