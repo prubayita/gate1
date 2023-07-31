@@ -65,8 +65,26 @@ def check_out_visitor(request, visitor_id):
     movement.save()
     messages.success(request, 'Visitor checked out successfully.')
     return redirect('records:movements')
+# Add a new view to handle the checkout process
+def manual_checkout(request):
+    if request.method == 'POST':
+        card_number = request.POST['cardNumber']
+        try:
+            # Retrieve all matching Movement objects (unchecked-in movements with the given card number)
+            movements = Movement.objects.filter(card__number=card_number, time_out__isnull=True)
 
-@login_required
+            if movements.exists():
+                # Choose the most recent Movement (based on id) for checkout
+                movement = movements.latest('id')
+                movement.time_out = timezone.now()
+                movement.save()
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Invalid card number or visitor already checked out.'})
+        except Movement.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Invalid card number or visitor already checked out.'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
 # @group_required('Supervisor')
 # @group_required('Security')
 def visitor_list(request):
