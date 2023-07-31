@@ -142,32 +142,35 @@
     </div>
   </header>
   <!-- ========== header end ========== -->
-  <!-- Add a new section for the checkout button and popup -->
-<section class="checkout-section">
-  <button id="checkoutButton" class="main-btn active-btn rounded-full btn-hover btn-sm">Checkout</button>
-</section>
-
-<!-- Add a hidden popup for checkout -->
-<div id="checkoutPopup" class="checkout-popup">
-  <div class="checkout-content">
-    <span class="close-popup" id="closeCheckoutPopup">&times;</span>
-    <h3>Checkout Visitor</h3>
-    <div class="checkout-form">
-      <label for="cardNumber">Card Number:</label>
-      <input type="text" id="cardNumber" name="cardNumber" required>
-      <button id="checkoutSubmit" class="main-btn active-btn rounded-full btn-hover btn-sm">Checkout</button>
-    </div>
-  </div>
-</div>
+ 
 <section class="table-components">
     <!-- <div class="container-fluid"> -->
         <div class="tables-wrapper">
+          
         <div class="row">
+          
             <div class="col-lg-12">
             <div class="card-style mb-30">
                 <h1 class="mb-10">Visitor List</h1>
                 <p class="text-sm mb-20"></p>
                 <div class="table-wrapper table-responsive">
+                   <!-- Add a new section for the checkout button and popup -->
+                  <section class="checkout-section">
+                    <button id="checkoutButton" class="main-btn active-btn rounded-full btn-hover btn-sm">Checkout</button>
+                  </section>
+
+                  <!-- Add a hidden popup for checkout -->
+                  <div id="checkoutPopup" class="checkout-popup">
+                    <div class="checkout-content">
+                      <span class="close-popup" id="closeCheckoutPopup">&times;</span>
+                      <h3>Checkout Visitor</h3>
+                      <div class="checkout-form">
+                        <label for="cardNumber">Card Number:</label>
+                        <input type="text" id="cardNumber" name="cardNumber" required>
+                        <button id="checkoutSubmit" class="main-btn active-btn rounded-full btn-hover btn-sm">Checkout</button>
+                      </div>
+                    </div>
+                  </div>
                 <table class="table">
                     <thead>
                     <tr>

@@ -9,7 +9,7 @@ class VisitorAdmin(admin.ModelAdmin):
 
 @admin.register(Movement)
 class MovementAdmin(admin.ModelAdmin):
-    list_display = ['purpose','devices', 'time_in', 'time_out', 'devices', 'comment', 'card']
+    list_display = ['id','purpose','devices', 'time_in', 'time_out', 'devices', 'comment', 'card']
 
 
 @admin.register(Card)
