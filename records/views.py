@@ -71,8 +71,9 @@ def check_out_visitor(request, visitor_id):
 # @group_required('Security')
 def visitor_list(request):
     waitinglist=WaitingList.objects.all().values()
+    cards=Card.objects.all().values()
     template = loader.get_template('records/visitor_list.html')
-    context = {'waitinglist': waitinglist }
+    context = {'waitinglist': waitinglist, 'cards': cards }
     return HttpResponse(template.render(context, request))
 
 # details of a visitor
@@ -84,8 +85,8 @@ def details(request, visitor_id):
         # Get the form data
         purpose = request.POST.get('purpose')
         comment = request.POST.get('comment')
-        card_id = request.POST.get('card')
         devices = request.POST.get('devices')
+        card_id = request.POST.get('card')
         
          # Create a new Visitor instance
         visitor = Visitor(

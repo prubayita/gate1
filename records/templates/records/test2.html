@@ -45,3 +45,13 @@
     </table>
 </body>
 </html>
+
+<div class="mb-3">
+    <label for="card" class="form-label">Card:</label>
+    <select name="card" class="form-select">
+        <option value="">Select Card</option>
+        {% for card in cards %}
+            <option value="{{ card.number }}">{{ card.number }}</option>
+        {% endfor %}
+    </select>
+</div>

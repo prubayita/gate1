@@ -214,7 +214,7 @@
           <div class="modal-body">
               <!-- Approval form -->
               <form id="approvalForm" method="POST">
-                  {% csrf_token %}
+                  {% csrf_token %}                  
                   <!-- Additional fields for data collection -->
                   <div class="mb-3">
                       <label for="purpose" class="form-label">Purpose:</label>
@@ -229,14 +229,9 @@
                       <textarea name="devices" class="form-control"></textarea>
                   </div>
                   <div class="mb-3">
-                      <label for="card" class="form-label">Card:</label>
-                      <select name="card" class="form-select">
-                          <option value="">Select Card</option>
-                          {% for card in cards %}
-                              <option value="{{ card.id }}">{{ card.name }}</option>
-                          {% endfor %}
-                      </select>
-                  </div>
+                    <label for="card"  class="form-label">card:</label>
+                    <input type="number" name="card" class="form-control">
+                </div>
               </form>
           </div>
           <div class="modal-footer">

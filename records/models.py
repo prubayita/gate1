@@ -32,7 +32,7 @@ class Visitor(models.Model):
 
 class Card(models.Model):
     name= models.CharField(max_length=50)
-    number = models.IntegerField(max_length=50)
+    number = models.CharField(max_length=50)
 
     def __str__(self):
         return self.number
@@ -46,7 +46,7 @@ class Movement(models.Model):
     time_out = models.DateTimeField(blank=True, null=True)
     devices = models.CharField(max_length=200, blank=True)
     comment = models.TextField(blank=True)
-    card = models.OneToOneField(Card, on_delete=models.SET_NULL, blank=True, null=True)
+    card = models.ForeignKey(Card, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return f"{self.visitor} - Time In: {self.time_in} - Time Out: {self.time_out}"

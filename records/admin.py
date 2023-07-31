@@ -14,7 +14,7 @@ class MovementAdmin(admin.ModelAdmin):
 
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
-    list_display = ['name', 'number']
+    list_display = ['name', 'number', 'id']
 
 
 @admin.register(WaitingList)
