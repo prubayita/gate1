@@ -35,7 +35,7 @@ class Card(models.Model):
     number = models.IntegerField(max_length=50)
 
     def __str__(self):
-        return self.name
+        return self.number
 
 
 class Movement(models.Model):
