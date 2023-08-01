@@ -151,7 +151,7 @@
           
             <div class="col-lg-12">
             <div class="card-style mb-30">
-                <h1 class="mb-10">Visitor List</h1>
+                <h1 class="mb-10">Movements</h1>
                 <p class="text-sm mb-20"></p>
                 <div class="table-wrapper table-responsive">
                    <!-- Add a new section for the checkout button and popup -->
@@ -211,11 +211,11 @@
                         <td class="min-width">{{ movement.time_out|default_if_none:"Not checked out" }}</td>
                         <td class="min-width">
                           {% if movement.time_out %}
-                          <button class="btn rounded-full btn-danger btn-sm" disabled>Checked Out</button>
+                          <button class="btn rounded-md btn-danger btn-sm" disabled>Checked Out</button>
                           {% else %}
                           <form method="post" action="{% url 'records:check_out_visitor' visitor_id=movement.visitor.id_passport_nbr %}">
                             {% csrf_token %}
-                            <input type="submit" class="btn rounded-full btn-success btn-sm checkoutButton" value="Check Out">
+                            <input type="submit" class="btn rounded-md btn-success btn-sm checkoutButton" value="Check Out">
                         </form>
                           {% endif %}
                         </td>

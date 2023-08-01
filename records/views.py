@@ -61,7 +61,7 @@ def check_out_visitor(request, visitor_id):
     # movement = Movement.objects.get(pk=visitor_id)
     movement = get_object_or_404(Movement, visitor__id_passport_nbr=visitor_id, time_out__isnull=True)
     # if movement.time_out is None:
-    movement.time_out = datetime.now()
+    movement.time_out = timezone.now()
     movement.save()
     messages.success(request, 'Visitor checked out successfully.')
     return redirect('records:movements')
@@ -73,6 +73,7 @@ def manual_checkout(request):
             movement = Movement.objects.get(card__number=card_number, time_out__isnull=True)
             movement.time_out = timezone.now()
             movement.save()
+            messages.success(request, 'Visitor checked out successfully.')
             return JsonResponse({'success': True})
         except Movement.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Invalid card number or visitor already checked out.'})
