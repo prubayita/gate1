@@ -163,12 +163,24 @@
                   <div id="checkoutPopup" class="checkout-popup">
                     <div class="checkout-content">
                       <span class="close-popup" id="closeCheckoutPopup">&times;</span>
-                      <h3>Checkout Visitor</h3>
+                      <center><h3>Checkout Visitor</h3></center><br>
+                       <!-- Animated Credit Card -->
+                      <div class="animated-card">
+                        <!-- Credit card content and design -->
+                        <div class="credit-card"></div>
+                         <!-- Add text on the card -->
+                        <div class="card-text">
+                          <img src="https://bsc.rw/wp-content/uploads/2023/01/BSC-High-res.-vector-logo-01@2x-1-160x69.png" alt="logo" />
+                        </div>
+                      </div>
+                      <!-- End of Animated Credit Card -->
                       <div class="checkout-form visually-hidden">
                         <label for="cardNumber">Card Number:</label>
                         <input type="text" id="cardNumber" name="cardNumber" required>
                         <button id="checkoutSubmit" class="main-btn active-btn rounded-full btn-hover btn-sm">Checkout</button>
                       </div>
+                       
+   
                     </div>
                   </div>
                 <table id="movement" class="table">
@@ -199,11 +211,11 @@
                         <td class="min-width">{{ movement.time_out|default_if_none:"Not checked out" }}</td>
                         <td class="min-width">
                           {% if movement.time_out %}
-                          <button class="btn btn-danger btn-sm" disabled>Checked Out</button>
+                          <button class="btn rounded-full btn-danger btn-sm" disabled>Checked Out</button>
                           {% else %}
                           <form method="post" action="{% url 'records:check_out_visitor' visitor_id=movement.visitor.id_passport_nbr %}">
                             {% csrf_token %}
-                            <input type="submit" class="btn btn-success btn-sm checkoutButton" value="Check Out">
+                            <input type="submit" class="btn rounded-full btn-success btn-sm checkoutButton" value="Check Out">
                         </form>
                           {% endif %}
                         </td>
