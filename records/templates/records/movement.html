@@ -164,14 +164,14 @@
                     <div class="checkout-content">
                       <span class="close-popup" id="closeCheckoutPopup">&times;</span>
                       <h3>Checkout Visitor</h3>
-                      <div class="checkout-form">
+                      <div class="checkout-form visually-hidden">
                         <label for="cardNumber">Card Number:</label>
                         <input type="text" id="cardNumber" name="cardNumber" required>
                         <button id="checkoutSubmit" class="main-btn active-btn rounded-full btn-hover btn-sm">Checkout</button>
                       </div>
                     </div>
                   </div>
-                <table class="table">
+                <table id="movement" class="table">
                     <thead>
                     <tr>
                         <th><h6>Name</h6></th>
@@ -182,50 +182,34 @@
                         <th><h6>Card Number</h6></th>
                         <th><h6>Time In</h6></th>
                         <th><h6>Time Out</h6></th>
+                        <th><h6>Status</h6></th>
                     </tr>
                     <!-- end table row-->
                     </thead>
                     <tbody>
-                    {% include 'partials/alerts.html' %}
-                    {% for movement in movements %}        
-                    <tr>
+                      {% for movement in movements %}
+                      <tr data-visitor-id="{{ movement.visitor.id_passport_nbr }}">
+                        <td class="min-width">{{ movement.visitor.first_name }}</td>
+                        <td class="min-width">{{ movement.visitor.id_passport_nbr}}</td>
+                        <td class="min-width">{{ movement.visitor.email }}</td>
+                        <td class="min-width">{{ movement.visitor.mobile_phone }}</td>
+                        <td class="min-width">{{ movement.visitor.organization }}</td>
+                        <td class="min-width">{{ movement.card.name }}</td>
+                        <td class="min-width">{{ movement.time_in }}</td>
+                        <td class="min-width">{{ movement.time_out|default_if_none:"Not checked out" }}</td>
                         <td class="min-width">
-                            <p>{{ movement.visitor.first_name }}</p>
-                        </td>
-                        <td class="min-width">
-                        <p>{{ movement.visitor.id_passport_nbr}}</p>
-                        </td>
-                        <td class="min-width">
-                        <p>{{ movement.visitor.email }}</p>
-                        </td>
-                        <td class="min-width">
-                            <p>{{ movement.visitor.mobile_phone }}</p>
-                        </td>
-                        <td class="min-width">
-                          <p>{{ movement.visitor.organization }}</p>
-                        </td>
-                        <td class="min-width">
-                          <p>{{ movement.card.name }}</p>
-                        </td>
-                        <td class="min-width">
-                          <p>{{ movement.time_in }}</p>
-                        </td>
-                        <td>
                           {% if movement.time_out %}
-                          <p>{{ movement.time_out }}</p>
-                              <!-- <h6 class="main-btn success-btn rounded-full btn-hover btn-sm">Checked out</h6> -->
+                          <button class="btn btn-danger btn-sm" disabled>Checked Out</button>
                           {% else %}
                           <form method="post" action="{% url 'records:check_out_visitor' visitor_id=movement.visitor.id_passport_nbr %}">
-                              {% csrf_token %}
-                              <input type="submit" class="main-btn active-btn rounded-full btn-hover btn-sm" value="Check Out">
-                          </form>
-                          {% endif %} 
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-success btn-sm checkoutButton" value="Check Out">
+                        </form>
+                          {% endif %}
                         </td>
-                    </tr>
-                    {% endfor %}
-                   
-                   
-                    <!-- end table row -->
+                        
+                      </tr>
+                      {% endfor %}
                     </tbody>
                 </table>
                 <!-- end table -->
