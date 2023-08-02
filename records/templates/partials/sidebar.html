@@ -28,17 +28,20 @@
             <span class="text">Dashboard</span>
           </a>
           <ul id="ddmenu_1" class="collapse show dropdown-nav">
-            <li>
+            <!-- <li>
               <a href="{% url 'records:overview' %}">Overview </a>
+            </li> -->
+            <li>
+              <a href="{% url 'records:record_visitor' %}" {% if request.path == "/record-visitor/" %} class="active" {% endif %}> Record Visitor </a>
             </li>
             <li>
-              <a href="{% url 'records:record_visitor' %}" class="active"> Record Visitor </a>
+              <a href="{% url 'records:visitors' %}" {% if request.path == "/visitor-list/" %} class="active" {% endif %}> Waiting List </a>
             </li>
             <li>
-              <a href="{% url 'records:visitors' %}"> Waiting List </a>
+              <a href="{% url 'records:visitors' %}" {% if request.path == "/record-visitor/" %} class="active" {% endif %}> Approvals </a>
             </li>
             <li>
-              <a href="{% url 'records:movements' %}"> Movements </a>
+              <a href="{% url 'records:movements' %}" {% if request.path == "/movements/" %} class="active" {% endif %}> Movement </a>
             </li>
           </ul>
         </li>

@@ -148,7 +148,7 @@
         <div class="row">
             <div class="col-lg-12">
             <div class="card-style mb-30">
-                <h1 class="mb-10">Visitor List</h1>
+                <h1 class="mb-10">Waiting List</h1>
                 <p class="text-sm mb-20"></p>
                 <div class="table-wrapper table-responsive">
                 <table class="table">
@@ -221,6 +221,16 @@
                       <input type="text" name="purpose" class="form-control">
                   </div>
                   <div class="mb-3">
+                    <label for="email_recipient_user" class="form-label">Select BSC Employee:</label>
+                    <select name="email_recipient_user">
+                      <option value="">Select BSC Employee </option>
+                      {% for user in users %}
+                      <option value="">{{ user.username }}</option>
+                      {% endfor %}
+                  </select>
+                  </div>
+                  
+                  <div class="mb-3">
                       <label for="comment" class="form-label">Comment:</label>
                       <textarea name="comment" class="form-control"></textarea>
                   </div>
@@ -234,8 +244,14 @@
                 </div>
               </form>
           </div>
+          
           <div class="modal-footer">
-              <!-- Submit button -->
+            <!-- decline button -->
+              <form id="deleteForm" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Decline</button>
+              </form>
+            <!-- Submit button -->
               <button type="submit" form="approvalForm" class="btn btn-primary">Approve</button>
           </div>
       </div>

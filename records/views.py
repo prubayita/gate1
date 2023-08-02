@@ -10,6 +10,8 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from .decorators import *
 from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 def login(request):  
     if request.method == 'POST':
@@ -32,7 +34,7 @@ def overview(request):
   template = loader.get_template('records/test.html')
   return HttpResponse(template.render())
 
-# @login_required
+@login_required
 # @group_required('Security')
 def record_visitor(request):
     if request.method == 'POST':
@@ -65,16 +67,23 @@ def check_out_visitor(request, visitor_id):
     movement.save()
     messages.success(request, 'Visitor checked out successfully.')
     return redirect('records:movements')
+@login_required
 # Add a new view to handle the checkout process
 def manual_checkout(request):
     if request.method == 'POST':
         card_number = request.POST['cardNumber']
         try:
-            movement = Movement.objects.get(card__number=card_number, time_out__isnull=True)
-            movement.time_out = timezone.now()
-            movement.save()
-            messages.success(request, 'Visitor checked out successfully.')
-            return JsonResponse({'success': True})
+            # Retrieve all matching Movement objects (unchecked-in movements with the given card number)
+            movements = Movement.objects.filter(card__number=card_number, time_out__isnull=True)
+
+            if movements.exists():
+                # Choose the most recent Movement (based on id) for checkout
+                movement = movements.latest('id')
+                movement.time_out = timezone.now()
+                movement.save()
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Invalid card number or visitor already checked out.'})
         except Movement.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Invalid card number or visitor already checked out.'})
 
@@ -90,6 +99,7 @@ def visitor_list(request):
     context = {'waitinglist': waitinglist, 'cards': cards }
     return HttpResponse(template.render(context, request))
 
+@login_required
 # details of a visitor
 def details(request, visitor_id):
     detailedVisitor = get_object_or_404(WaitingList, id_passport_nbr=visitor_id)
@@ -100,7 +110,7 @@ def details(request, visitor_id):
         purpose = request.POST.get('purpose')
         comment = request.POST.get('comment')
         devices = request.POST.get('devices')
-        card_id = request.POST.get('card')
+        card_number = request.POST.get('card')
         
          # Create a new Visitor instance
         visitor = Visitor(
@@ -126,9 +136,10 @@ def details(request, visitor_id):
         )
         
         # Set the card if selected
-        if card_id:
-            card = get_object_or_404(Card, pk=card_id)
-            movement.card = card
+        if card_number:
+         card = Card.objects.filter(number=card_number).first()
+         if card is not None:
+                movement.card = card
         
         # Save the Movement instance
         movement.save()
@@ -141,12 +152,25 @@ def details(request, visitor_id):
         'detailedVisitor': detailedVisitor,
     }
     return render(request, 'records/visitor_list.html', context)
+
 #   detailedVisitor = WaitingList.objects.get(id_passport_nbr=id)
 #   template = loader.get_template('records/details.html')
 #   context = {
 #     'detailedVisitor': detailedVisitor,
 #   }
 #   return HttpResponse(template.render(context, request))
+@login_required
+# decline in waiting list 
+def delete_waiting(request, visitor_id):
+    waiting_list = get_object_or_404(WaitingList, id_passport_nbr=visitor_id)
+
+    if request.method == 'POST':
+        waiting_list.delete()
+        return redirect('records:visitors')  # Redirect to the list of visitors after successful deletion
+
+    # You can also handle the case when the request method is not POST, e.g., show a confirmation page.
+    # In this example, it simply redirects to the list of visitors.
+    return redirect('records:visitors')
 
 @login_required
 def search_visitors(request):
@@ -157,7 +181,7 @@ def search_visitors(request):
     return JsonResponse({'html': html})
 
 
-
+@login_required
 def approve_visitor(request, visitor_id):
     # Retrieve the visitor from the WaitingList
     waiting_visitor = WaitingList.objects.get(id_passport_nbr=visitor_id)
@@ -180,10 +204,10 @@ def approve_visitor(request, visitor_id):
 
     # Delete the corresponding entry from the WaitingList
     waiting_visitor.delete()
-    messages.success(request, 'Visitor checked out successfully.')
+    messages.success(request, 'Visitor approved  successfully.')
     return redirect('records:visitors')
 
-
+@login_required
 def movements(request):
     # movements = Movement.objects.all()
     checked_in_visitors = Movement.objects.filter(time_out__isnull=True)
