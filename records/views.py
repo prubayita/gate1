@@ -12,6 +12,8 @@ from .decorators import *
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.conf import settings
 
 def login(request):  
     if request.method == 'POST':
@@ -89,30 +91,35 @@ def manual_checkout(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
 
-@login_required
+
 # @group_required('Supervisor')
 # @group_required('Security')
+@login_required
 def visitor_list(request):
-    waitinglist=WaitingList.objects.all().values()
-    cards=Card.objects.all().values()
+    # Fetch the list of users
+    users = User.objects.all()
+
+    waitinglist = WaitingList.objects.all().values()
+    cards = Card.objects.all().values()
     template = loader.get_template('records/visitor_list.html')
-    context = {'waitinglist': waitinglist, 'cards': cards }
+    context = {'waitinglist': waitinglist, 'cards': cards, 'users': users}  # Add 'users' to the context
     return HttpResponse(template.render(context, request))
 
 @login_required
 # details of a visitor
+@login_required
 def details(request, visitor_id):
     detailedVisitor = get_object_or_404(WaitingList, id_passport_nbr=visitor_id)
-    
-    # Handle form submission for visitor approval
+
     if request.method == 'POST':
         # Get the form data
         purpose = request.POST.get('purpose')
         comment = request.POST.get('comment')
         devices = request.POST.get('devices')
         card_number = request.POST.get('card')
-        
-         # Create a new Visitor instance
+        email_recipient_user = request.POST.get('email_recipient_user')
+
+        # Create a new Visitor instance
         visitor = Visitor(
             id_passport_nbr=detailedVisitor.id_passport_nbr,
             first_name=detailedVisitor.first_name,
@@ -126,33 +133,55 @@ def details(request, visitor_id):
         )
         # Save the Visitor instance
         visitor.save()
+
         # Create a new Movement instance
         movement = Movement(
             visitor=visitor,
             purpose=purpose,
             devices=devices,
             time_in=timezone.now(),
-            comment=comment
+            comment=comment,
+            card=None  # Set the card later, if selected
         )
-        
+
         # Set the card if selected
         if card_number:
-         card = Card.objects.filter(number=card_number).first()
-         if card is not None:
+            card = Card.objects.filter(number=card_number).first()
+            if card is not None:
                 movement.card = card
-        
+
         # Save the Movement instance
         movement.save()
-        
+
+        # Send email notification to the selected user
+        if email_recipient_user:
+            user = User.objects.filter(username=email_recipient_user).first()
+            if user is not None:
+                subject = 'Visitor Approval Notification'
+                message = f'Hello {user.username},\n\nYou have a visitor approved. Visitor details:\nName: {visitor.first_name} {visitor.surname}\nEmail: {visitor.email}\nPhone: {visitor.mobile_phone}'
+                from_email = settings.EMAIL_HOST_USER
+                recipient_list = [user.email]
+
+                try:
+                    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+                except Exception as e:
+                    # Handle any errors that might occur while sending the email
+                    print(f"Error sending email: {e}")
+
         # Redirect or render a success message
         detailedVisitor.delete()
+        messages.success(request, 'Visitor approved and email notification sent successfully.')
         return redirect('records:visitors')
-    # Render the details template with the visitor's information
+
+    # Retrieve the list of BSC users for the dropdown
+    users = User.objects.all()
+
+    # Render the details template with the visitor's information and users list
     context = {
         'detailedVisitor': detailedVisitor,
+        'users': users,
     }
     return render(request, 'records/visitor_list.html', context)
-
 #   detailedVisitor = WaitingList.objects.get(id_passport_nbr=id)
 #   template = loader.get_template('records/details.html')
 #   context = {
@@ -183,6 +212,8 @@ def search_visitors(request):
 
 @login_required
 def approve_visitor(request, visitor_id):
+    # Get the selected user's username from the form data
+    selected_user = request.POST.get('email_recipient_user')
     # Retrieve the visitor from the WaitingList
     waiting_visitor = WaitingList.objects.get(id_passport_nbr=visitor_id)
 
@@ -201,7 +232,15 @@ def approve_visitor(request, visitor_id):
 
     # Save the new Visitor instance
     visitor.save()
-
+     # Send an email to the selected user
+    user_email = User.objects.get(username=selected_user).email
+    subject = 'Visitor Approval Notification'
+    message = f'Hello {selected_user},\n\nYou have a visitor waiting for approval.\n\nPlease login to the system to approve the visitor.\n\nBest regards,\nThe Visitor Management Team'
+    from_email = 'bsc@brunoimf.xyz'  # Replace with your email address or a no-reply email address
+    recipient_list = [user_email]
+    
+    # Send the email
+    send_mail(subject, message, from_email, recipient_list)
     # Delete the corresponding entry from the WaitingList
     waiting_visitor.delete()
     messages.success(request, 'Visitor approved  successfully.')

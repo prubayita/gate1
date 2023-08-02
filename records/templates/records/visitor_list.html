@@ -223,12 +223,12 @@
                   <div class="mb-3">
                     <label for="email_recipient_user" class="form-label">Select BSC Employee:</label>
                     <select name="email_recipient_user">
-                      <option value="">Select BSC Employee </option>
-                      {% for user in users %}
-                      <option value="">{{ user.username }}</option>
-                      {% endfor %}
-                  </select>
-                  </div>
+                        <option value="">Select BSC Employee</option>
+                        {% for user in users %}
+                            <option value="{{ user.username }}">{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                   
                   <div class="mb-3">
                       <label for="comment" class="form-label">Comment:</label>
