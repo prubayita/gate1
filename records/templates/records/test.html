@@ -213,9 +213,20 @@
           <div class="title mb-30">
             <h6>Register</h6>
           </div>
-          <form method="post" action="{% url 'records:record_visitor' %}">
+          <form method="post" id="register-form" action="{% url 'records:record_visitor' %}">
             {% csrf_token %}
             <div class="row">
+              <!-- Move ID/Passport Number field and add the search button -->
+              <div class="col-12">
+                <div class="input-style-1">
+                  <label for="id_passport_nbr">ID/Passport Number</label>
+                  <div class="search-container">
+                    <input type="text" placeholder="ID/Passport Number" name="id_passport_nbr" id="id_passport_nbr" required />
+                    <button type="button" class="main-btn primary-btn btn-hover" id="search_btn"><i class="lni lni-search"></i></button>
+                  </div>
+                </div>
+              </div>
+              <!-- Rest of the form fields -->
               <div class="col-12">
                 <div class="input-style-1">
                   <label for="first_name">First Name</label>
@@ -231,7 +242,7 @@
               <div class="col-12">
                 <div class="input-style-1">
                   <label for="organization">Organization</label>
-                  <input type="text" placeholder="Organization"name="organization" id="organization" required />
+                  <input type="text" placeholder="Organization" name="organization" id="organization" required />
                 </div>
               </div>
               <div class="col-12">
@@ -244,12 +255,6 @@
                 <div class="input-style-1">
                   <label for="country_of_origin">Country of Origin</label>
                   <input type="text" placeholder="Country of Origin" name="country_of_origin" id="country_of_origin" />
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="input-style-1">
-                  <label for="id_passport_nbr">ID/Passport Number</label>
-                  <input type="text" placeholder="ID/Passport Number" name="id_passport_nbr" id="id_passport_nbr" required />
                 </div>
               </div>
               <div class="col-12">
@@ -277,6 +282,7 @@
               </div>
             </div>
           </form>
+          
         </div>
         <!-- end card -->
       </div>

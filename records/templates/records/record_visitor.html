@@ -8,6 +8,13 @@
     <h1>Register</h1>
     <form method="post" action="{% url 'records:record_visitor' %}">
         {% csrf_token %}
+        
+        <!-- Move ID/Passport Number field and add the search button -->
+        <label for="id_passport_nbr">ID/Passport Number:</label>
+        <input type="text" name="id_passport_nbr" id="id_passport_nbr" required>
+        <button type="button" id="search_btn"><i class="fas fa-search"></i></button>
+        <br>
+        
         <label for="first_name">First Name:</label>
         <input type="text" name="first_name" id="first_name" required>
         <br>
@@ -23,9 +30,6 @@
         <label for="country_of_origin">Country of Origin:</label>
         <input type="text" name="country_of_origin" id="country_of_origin" required>
         <br>
-        <label for="id_passport_nbr">ID/Passport Number:</label>
-        <input type="text" name="id_passport_nbr" id="id_passport_nbr" required>
-        <br>
         <label for="email">Email:</label>
         <input type="email" name="email" id="email" required>
         <br>
@@ -40,6 +44,7 @@
         <br>
         <input type="submit" value="Submit">
       </form>
+      
       
 </body>
 </html>

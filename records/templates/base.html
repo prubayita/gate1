@@ -151,6 +151,7 @@
     <script src="{% static 'assets/js/world-merc.js' %}"></script>
     <script src="{% static 'assets/js/polyfill.js' %}"></script>
     <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // ======== jvectormap activation
         var markers = [
@@ -741,7 +742,34 @@
         });
       });
     </script>
+    <!--populate register form-->
+    <script>
+      // Function to populate form fields with user data
+      function populateFormFields(user) {
+        $('#first_name').val(user.first_name);
+        $('#surname').val(user.surname);
+        $('#organization').val(user.organization);
+        $('#position').val(user.position);
+        $('#country_of_origin').val(user.country_of_origin);
+        $('#email').val(user.email);
+        $('#address').val(user.address);
+        $('#mobile_phone').val(user.mobile_phone);
+      }
     
+      // Event listener for the search button click
+      $('#search_btn').on('click', function() {
+        const idPassportInput = $('#id_passport_nbr').val();
+        $.getJSON('/static/visitor.json', function(data) {
+          const user = data.find(user => user.id_passport_nbr === idPassportInput);
+          if (user) {
+            populateFormFields(user);
+            $('#register-form').submit(); // Submit the form programmatically
+          } else {
+            alert('User not found.');
+          }
+        });
+      });
+    </script>
     
     
     
