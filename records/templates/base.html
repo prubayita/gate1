@@ -658,6 +658,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             const formPopup = document.getElementById("formPopup");
             const approvalForm = document.getElementById("approvalForm");
+            const deleteForm = document.getElementById("deleteForm");
             const openFormLinks = document.querySelectorAll(".open-form-popup");
     
             openFormLinks.forEach(link => {
@@ -666,6 +667,7 @@
                     const visitorId = link.getAttribute("data-visitor-id");
                     // Set the form action URL based on the visitor ID
                     approvalForm.action = `/approve/${visitorId}/`;
+                    deleteForm.action = `/delete/${visitorId}/`;
                     // Show the form popup
                     const bootstrapModal = new bootstrap.Modal(formPopup);
                     bootstrapModal.show();
