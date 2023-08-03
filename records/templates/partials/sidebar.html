@@ -38,10 +38,10 @@
               <a href="{% url 'records:visitors' %}" {% if request.path == "/visitor-list/" %} class="active" {% endif %}> Waiting List </a>
             </li>
             <li>
-              <a href="{% url 'records:visitors' %}" {% if request.path == "/record-visitor/" %} class="active" {% endif %}> Approvals </a>
+              <a href="{% url 'records:movements' %}" {% if request.path == "/movements/" %} class="active" {% endif %}> Movement </a>
             </li>
             <li>
-              <a href="{% url 'records:movements' %}" {% if request.path == "/movements/" %} class="active" {% endif %}> Movement </a>
+              <a href="{% url 'records:logs' %}" {% if request.path == "/logs/" %} class="active" {% endif %}> Logs </a>
             </li>
           </ul>
         </li>

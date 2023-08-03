@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 import json
+from .models import Log
 
 
 def login(request):  
@@ -66,15 +67,21 @@ def record_visitor(request):
 
 @login_required
 def check_out_visitor(request, visitor_id):
-    # movement = Movement.objects.get(pk=visitor_id)
+    # Retrieve the movement with the provided visitor_id and time_out=None
     movement = get_object_or_404(Movement, visitor__id_passport_nbr=visitor_id, time_out__isnull=True)
-    # if movement.time_out is None:
+
+    # Set the time_out to the current time and save the movement
     movement.time_out = timezone.now()
+    movement.user_checked_out = request.user  # Assign the user who checked out the visitor
     movement.save()
+
+    # Create a new Log entry to record the action
+    log_entry = Log(action='CHECKOUT', user=request.user, visitor_id=visitor_id)
+    log_entry.save()
+
     messages.success(request, 'Visitor checked out successfully.')
     return redirect('records:movements')
 @login_required
-# Add a new view to handle the checkout process
 def manual_checkout(request):
     if request.method == 'POST':
         card_number = request.POST['cardNumber']
@@ -86,7 +93,13 @@ def manual_checkout(request):
                 # Choose the most recent Movement (based on id) for checkout
                 movement = movements.latest('id')
                 movement.time_out = timezone.now()
+                movement.user_checked_out = request.user  # Assign the user who checked out the visitor
                 movement.save()
+
+                # Create a new Log entry to record the action
+                log_entry = Log(action='CHECKOUT', user=request.user, visitor_id=movement.visitor_id)
+                log_entry.save()
+
                 return JsonResponse({'success': True})
             else:
                 return JsonResponse({'success': False, 'error': 'Invalid card number or visitor already checked out.'})
@@ -156,7 +169,9 @@ def details(request, visitor_id):
 
         # Save the Movement instance
         movement.save()
-
+        # Create a new Log entry to record the action of approving a visitor
+        log_entry = Log(action='APPROVE', user=request.user, visitor_id=visitor_id)
+        log_entry.save()
         # Send email notification to the selected user
         if email_recipient_user:
             user = User.objects.filter(username=email_recipient_user).first()
@@ -196,13 +211,17 @@ def details(request, visitor_id):
 # decline in waiting list 
 def delete_waiting(request, visitor_id):
     waiting_list = get_object_or_404(WaitingList, id_passport_nbr=visitor_id)
-
+    # Create a new Log entry to record the action of approving a visitor
+    log_entry = Log(action='DECLINE', user=request.user, visitor_id=visitor_id)
+    log_entry.save()
     if request.method == 'POST':
         waiting_list.delete()
         return redirect('records:visitors')  # Redirect to the list of visitors after successful deletion
 
+    
     # You can also handle the case when the request method is not POST, e.g., show a confirmation page.
     # In this example, it simply redirects to the list of visitors.
+    messages.success(request, 'Visitor declined successfully.')
     return redirect('records:visitors')
 
 @login_required
@@ -214,41 +233,48 @@ def search_visitors(request):
     return JsonResponse({'html': html})
 
 
-@login_required
-def approve_visitor(request, visitor_id):
-    # Get the selected user's username from the form data
-    selected_user = request.POST.get('email_recipient_user')
-    # Retrieve the visitor from the WaitingList
-    waiting_visitor = WaitingList.objects.get(id_passport_nbr=visitor_id)
+# @login_required
+# def approve_visitor(request, visitor_id):
+#     # Get the selected user's username from the form data
+#     selected_user = request.POST.get('email_recipient_user')
+#     # Retrieve the visitor from the WaitingList
+#     waiting_visitor = WaitingList.objects.get(id_passport_nbr=visitor_id)
 
-    # Create a new Visitor instance with the data from the WaitingList
-    visitor = Visitor(
-        id_passport_nbr=waiting_visitor.id_passport_nbr,
-        first_name=waiting_visitor.first_name,
-        surname=waiting_visitor.surname,
-        organization=waiting_visitor.organization,
-        position=waiting_visitor.position,
-        country_of_origin=waiting_visitor.country_of_origin,
-        email=waiting_visitor.email,
-        address=waiting_visitor.address,
-        mobile_phone=waiting_visitor.mobile_phone
-    )
+#     # Create a new Visitor instance with the data from the WaitingList
+#     visitor = Visitor(
+#         id_passport_nbr=waiting_visitor.id_passport_nbr,
+#         first_name=waiting_visitor.first_name,
+#         surname=waiting_visitor.surname,
+#         organization=waiting_visitor.organization,
+#         position=waiting_visitor.position,
+#         country_of_origin=waiting_visitor.country_of_origin,
+#         email=waiting_visitor.email,
+#         address=waiting_visitor.address,
+#         mobile_phone=waiting_visitor.mobile_phone
+#     )
 
-    # Save the new Visitor instance
-    visitor.save()
-     # Send an email to the selected user
-    user_email = User.objects.get(username=selected_user).email
-    subject = 'Visitor Approval Notification'
-    message = f'Hello {selected_user},\n\nYou have a visitor waiting for approval.\n\nPlease login to the system to approve the visitor.\n\nBest regards,\nThe Visitor Management Team'
-    from_email = 'visitor@bsc.rw'  # Replace with your email address or a no-reply email address
-    recipient_list = [user_email]
+#     # Save the new Visitor instance
+#     visitor.save()
+
+#     # Create a new Log entry to record the action of approving a visitor
+#     log_entry = Log(action='APPROVE', user=request.user, visitor_id=visitor_id)
+#     log_entry.save()
+
+#     # Send an email to the selected user
+#     user_email = User.objects.get(username=selected_user).email
+#     subject = 'Visitor Approval Notification'
+#     message = f'Hello {selected_user},\n\nYou have a visitor waiting for approval.\n\nPlease login to the system to approve the visitor.\n\nBest regards,\nThe Visitor Management Team'
+#     from_email = 'visitor@bsc.rw'  # Replace with your email address or a no-reply email address
+#     recipient_list = [user_email]
     
-    # Send the email
-    send_mail(subject, message, from_email, recipient_list)
-    # Delete the corresponding entry from the WaitingList
-    waiting_visitor.delete()
-    messages.success(request, 'Visitor approved  successfully.')
-    return redirect('records:visitors')
+#     # Send the email
+#     send_mail(subject, message, from_email, recipient_list)
+
+#     # Delete the corresponding entry from the WaitingList
+#     waiting_visitor.delete()
+
+#     messages.success(request, 'Visitor approved successfully.')
+#     return redirect('records:visitors')
 
 @login_required
 def movements(request):
@@ -264,6 +290,7 @@ def movements(request):
 
     movements = list(checked_in_visitors) + list(checked_out_visitors)
     context = {'movements': movements}
+    
     return render(request, 'records/movement.html', context)
 def signup(request):
     if request.method == 'POST':
@@ -291,3 +318,11 @@ def signup(request):
             return redirect('records:signup')
 
     return render(request, 'cre/signup.html')
+
+@login_required
+def logs(request):
+    # Query the Log model and order the logs by timestamp in descending order (most recent first)
+    logs = Log.objects.all().order_by('-timestamp')
+
+    context = {'logs': logs}
+    return render(request, 'records/logs.html', context)

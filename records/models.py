@@ -55,3 +55,20 @@ class Movement(models.Model):
 
     def __str__(self):
         return f"{self.visitor} - Time In: {self.time_in} - Time Out: {self.time_out}"
+
+class Log(models.Model):
+    action_choices = [
+        ('APPROVE', 'Approved Visitor'),
+        ('CHECKOUT', 'Check Out Visitor'),
+        ('DECLINE', 'Declined Visitor'),
+        # Add more action choices as needed
+    ]
+    action = models.CharField(max_length=20, choices=action_choices)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    visitor_id = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.action} - {self.user} - {self.timestamp}"
+
+       

@@ -20,3 +20,7 @@ class CardAdmin(admin.ModelAdmin):
 @admin.register(WaitingList)
 class WaitingListAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'surname', 'organization', 'position', 'country_of_origin', 'id_passport_nbr', 'email', 'address', 'mobile_phone']
+
+@admin.register(Log)
+class LogAdmin(admin.ModelAdmin):
+    list_display = ['action', 'user', 'timestamp', 'visitor_id']
