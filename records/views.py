@@ -240,7 +240,7 @@ def approve_visitor(request, visitor_id):
     user_email = User.objects.get(username=selected_user).email
     subject = 'Visitor Approval Notification'
     message = f'Hello {selected_user},\n\nYou have a visitor waiting for approval.\n\nPlease login to the system to approve the visitor.\n\nBest regards,\nThe Visitor Management Team'
-    from_email = 'bsc@brunoimf.xyz'  # Replace with your email address or a no-reply email address
+    from_email = 'visitor@bsc.rw'  # Replace with your email address or a no-reply email address
     recipient_list = [user_email]
     
     # Send the email
