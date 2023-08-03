@@ -14,6 +14,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
+import json
+
 
 def login(request):  
     if request.method == 'POST':
@@ -39,6 +41,8 @@ def overview(request):
 @login_required
 # @group_required('Security')
 def record_visitor(request):
+    visitors_list = Visitor.objects.all().values()
+    visitors_list = json.dumps(list(visitors_list))
     if request.method == 'POST':
         form_data = request.POST
         waitingList = WaitingList(
@@ -58,7 +62,7 @@ def record_visitor(request):
         waitingList.save()
         messages.success(request, 'Visitor recorded successfully in WaitingList.')
         return redirect('records:record_visitor')
-    return render(request, 'records/test.html')
+    return render(request, 'records/test.html', {'visitors_list': visitors_list})
 
 @login_required
 def check_out_visitor(request, visitor_id):
