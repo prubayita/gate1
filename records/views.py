@@ -265,3 +265,29 @@ def movements(request):
     movements = list(checked_in_visitors) + list(checked_out_visitors)
     context = {'movements': movements}
     return render(request, 'records/movement.html', context)
+def signup(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        password = request.POST['password']
+
+        # Create a new user in the database
+        try:
+            user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
+            user.is_staff = True
+            user.is_superuser = True
+            user.save()
+
+            # Automatically log in the new user
+            auth_login(request, user)
+
+            # Redirect to the desired page after successful signup (e.g., record_visitor page)
+            return redirect('records:record_visitor')
+        except Exception as e:
+            messages.error(request, 'Error creating user. Please try again.')
+            # Redirect back to the signup page
+            return redirect('records:signup')
+
+    return render(request, 'cre/signup.html')
