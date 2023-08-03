@@ -742,8 +742,11 @@
         });
       });
     </script>
-    <!--populate register form-->
+    
+    <!---populate register form -->
     <script>
+      var allData = JSON.parse('{{ visitors_list|escapejs }}');
+      console.log(allData);
       // Function to populate form fields with user data
       function populateFormFields(user) {
         $('#first_name').val(user.first_name);
@@ -755,23 +758,20 @@
         $('#address').val(user.address);
         $('#mobile_phone').val(user.mobile_phone);
       }
-    
+
       // Event listener for the search button click
       $('#search_btn').on('click', function() {
         const idPassportInput = $('#id_passport_nbr').val();
-        $.getJSON('/static/visitor.json', function(data) {
-          const user = data.find(user => user.id_passport_nbr === idPassportInput);
-          if (user) {
-            populateFormFields(user);
-            $('#register-form').submit(); // Submit the form programmatically
-          } else {
-            alert('User not found.');
-          }
-        });
+        const user = allData.find(user => user.id_passport_nbr === idPassportInput);
+        // console.log(user);
+        if (user) {
+          populateFormFields(user);
+          $('#register-form').submit(); // Submit the form programmatically
+        } else {
+          alert('User not found.');
+        }
       });
     </script>
-    
-    
     
     
     
