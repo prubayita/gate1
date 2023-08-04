@@ -62,6 +62,8 @@ def record_visitor(request):
             # time_in=datetime.now()
         )
         waitingList.save()
+        log_entry = Log(action='RECORD', user=request.user, visitor_id=waitingList.id_passport_nbr)
+        log_entry.save()
         messages.success(request, 'Visitor recorded successfully in WaitingList.')
         return redirect('records:record_visitor')
     return render(request, 'records/test.html', {'visitors_list': visitors_list})
@@ -234,48 +236,7 @@ def search_visitors(request):
     return JsonResponse({'html': html})
 
 
-# @login_required
-# def approve_visitor(request, visitor_id):
-#     # Get the selected user's username from the form data
-#     selected_user = request.POST.get('email_recipient_user')
-#     # Retrieve the visitor from the WaitingList
-#     waiting_visitor = WaitingList.objects.get(id_passport_nbr=visitor_id)
 
-#     # Create a new Visitor instance with the data from the WaitingList
-#     visitor = Visitor(
-#         id_passport_nbr=waiting_visitor.id_passport_nbr,
-#         first_name=waiting_visitor.first_name,
-#         surname=waiting_visitor.surname,
-#         organization=waiting_visitor.organization,
-#         position=waiting_visitor.position,
-#         country_of_origin=waiting_visitor.country_of_origin,
-#         email=waiting_visitor.email,
-#         address=waiting_visitor.address,
-#         mobile_phone=waiting_visitor.mobile_phone
-#     )
-
-#     # Save the new Visitor instance
-#     visitor.save()
-
-#     # Create a new Log entry to record the action of approving a visitor
-#     log_entry = Log(action='APPROVE', user=request.user, visitor_id=visitor_id)
-#     log_entry.save()
-
-#     # Send an email to the selected user
-#     user_email = User.objects.get(username=selected_user).email
-#     subject = 'Visitor Approval Notification'
-#     message = f'Hello {selected_user},\n\nYou have a visitor waiting for approval.\n\nPlease login to the system to approve the visitor.\n\nBest regards,\nThe Visitor Management Team'
-#     from_email = 'visitor@bsc.rw'  # Replace with your email address or a no-reply email address
-#     recipient_list = [user_email]
-    
-#     # Send the email
-#     send_mail(subject, message, from_email, recipient_list)
-
-#     # Delete the corresponding entry from the WaitingList
-#     waiting_visitor.delete()
-
-#     messages.success(request, 'Visitor approved successfully.')
-#     return redirect('records:visitors')
 
 @login_required
 def movements(request):

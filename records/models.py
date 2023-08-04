@@ -61,6 +61,7 @@ class Log(models.Model):
         ('APPROVE', 'Approved Visitor'),
         ('CHECKOUT', 'Check Out Visitor'),
         ('DECLINE', 'Declined Visitor'),
+        ('RECORD', 'Recorded a Visitor')
         # Add more action choices as needed
     ]
     action = models.CharField(max_length=20, choices=action_choices)
