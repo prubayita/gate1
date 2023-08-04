@@ -274,7 +274,80 @@
         }
       });
     </script>
+    <!--For search on visitors table-->
+    <script>
+      var allData2 = JSON.parse('{{ visitors_list2|escapejs }}');
+      console.log(allData2);
+      // Function to populate the table with data
+      function populateTable(data) {
+        const tableBody = $('#visitorTable tbody');
+        tableBody.empty();
     
+        data.forEach(function (visitor) {
+          const row = `
+            <tr>
+              <td class="min-width">${visitor.first_name}</td>
+              <td class="min-width">${visitor.surname}</td>
+              <td class="min-width">${visitor.email}</td>
+              <td class="min-width">${visitor.mobile_phone}</td>
+              <td class="min-width">${visitor.organization}</td>
+            </tr>
+          `;
+          tableBody.append(row);
+        });
+      }
+    
+      // Function to handle the search functionality
+      function handleSearch() {
+        console.log('Search input triggered.');
+        const searchInput = $('#searchInput');
+        const searchQuery = searchInput.val().toLowerCase();
+        console.log('Search Query:', searchQuery);
+        const filteredData = allData2.filter(function (visitor) {
+          // Use optional chaining to safely access properties
+          return (
+            visitor.first_name?.toLowerCase().includes(searchQuery) ||
+            visitor.surname?.toLowerCase().includes(searchQuery) ||
+            visitor.email?.toLowerCase().includes(searchQuery) ||
+            visitor.mobile_phone?.toLowerCase().includes(searchQuery) ||
+            visitor.organization?.toLowerCase().includes(searchQuery)
+          );
+        });
+        console.log('Filtered Data:', filteredData);
+        populateTable(filteredData);
+    
+        // If no results found, display a message
+        if (filteredData.length === 0) {
+          const tableBody = $('#visitorTable tbody');
+          const noResultsRow = `
+            <tr>
+              <td colspan="5">No visitors found.</td>
+            </tr>
+          `;
+          tableBody.append(noResultsRow);
+        }
+      }
+    
+      $(document).ready(function () {
+        // Initial table population with all data
+        populateTable(allData2);
+    
+        // Handle keyup event on the search input
+        $('#searchInput').keyup(function () {
+          handleSearch();
+        });
+    
+        // Handle form submit event (prevent page reload)
+        $('form').submit(function (event) {
+          event.preventDefault();
+          handleSearch();
+        });
+      });
+    </script>
+  
+  
+  
+  
     
     
     

@@ -41,6 +41,9 @@
               <a href="{% url 'records:movements' %}" {% if request.path == "/movements/" %} class="active" {% endif %}> Movement </a>
             </li>
             <li>
+              <a href="{% url 'records:all_visitors' %}" {% if request.path == "/all-visitors/" %} class="active" {% endif %}> All Visitors </a>
+            </li>
+            <li>
               <a href="{% url 'records:logs' %}" {% if request.path == "/logs/" %} class="active" {% endif %}> Logs </a>
             </li>
           </ul>

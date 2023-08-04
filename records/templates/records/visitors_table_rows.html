@@ -1,0 +1,14 @@
+{% comment %} {% for visitor in visitors %}
+<tr>
+    <td class="min-width">{{ visitor.first_name }}</td>
+    <td class="min-width">{{ visitor.last_name }}</td>
+    <td class="min-width">{{ visitor.email }}</td>
+    <td class="min-width">{{ visitor.mobile_phone }}</td>
+    <td class="min-width">{{ visitor.organization }}</td>
+    <!-- Add more fields as needed -->
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5">No visitors found.</td>
+</tr>
+{% endfor %} {% endcomment %}

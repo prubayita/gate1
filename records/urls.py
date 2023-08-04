@@ -17,5 +17,6 @@ urlpatterns = [
     path('delete/<str:visitor_id>/', views.delete_waiting, name='delete_waiting'),
     path('signup/', views.signup, name='signup'),
     path('logs/', views.logs, name='logs'),
+    path('all-visitors/', views.all_visitors, name='all_visitors'),
 
 ]

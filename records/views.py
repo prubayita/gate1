@@ -16,6 +16,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import json
 from .models import Log
+from .models import Visitor
 
 
 def login(request):  
@@ -326,3 +327,10 @@ def logs(request):
 
     context = {'logs': logs}
     return render(request, 'records/logs.html', context)
+
+@login_required
+def all_visitors(request):
+    visitors_list2 = Visitor.objects.all().values()
+    visitors_list2 = json.dumps(list(visitors_list2))
+    
+    return render(request, 'records/visitors.html', {'visitors_list2': visitors_list2})
