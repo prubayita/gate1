@@ -270,10 +270,10 @@ def signup(request):
             user.save()
 
             # Automatically log in the new user
-            auth_login(request, user)
+            # auth_login(request, user)
 
             # Redirect to the desired page after successful signup (e.g., record_visitor page)
-            return redirect('records:record_visitor')
+            return redirect('records:login')
         except Exception as e:
             messages.error(request, 'Error creating user. Please try again.')
             # Redirect back to the signup page
@@ -282,6 +282,7 @@ def signup(request):
     return render(request, 'cre/signup.html')
 
 @login_required
+# @group_required('Supervisor')
 def logs(request):
     # Query the Log model and order the logs by timestamp in descending order (most recent first)
     logs = Log.objects.all().order_by('-timestamp')
