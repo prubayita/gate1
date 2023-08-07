@@ -136,3 +136,6 @@ EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'visitor@bsc.rw'  # Replace with your email address
 EMAIL_HOST_PASSWORD = 'wlybnhxwrymnlbqt'  # Replace with your email password
 DEFAULT_FROM_EMAIL = 'visitor@bsc.rw'  # Replace with your email address
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

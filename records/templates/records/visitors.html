@@ -18,12 +18,7 @@
             </div>
             <div class="header-search d-none d-md-flex">
               <form action="#">
-                <input
-                                type="text"
-                                id="searchInput"
-                                placeholder="Search..."
-                                value="{{ search_query }}"
-                            />
+                <input type="text" placeholder="Search..." />
                 <button><i class="lni lni-search-alt"></i></button>
               </form>
             </div>
@@ -160,6 +155,7 @@
                                     <tr>
                                         <th><h6>First Name</h6></th>
                                         <th><h6>Last Name</h6></th>
+                                        <th><h6>ID/Passport</h6></th>
                                         <th><h6>Email</h6></th>
                                         <th><h6>Phone number</h6></th>
                                         <th><h6>Organization</h6></th>
@@ -168,14 +164,7 @@
                             
                                 <tbody>
                                     {% for visitor in allData2 %}
-                                      <tr>
-                                        <td class="min-width">{{ visitor.first_name }}</td>
-                                        <td class="min-width">{{ visitor.surname }}</td>
-                                        <td class="min-width">{{ visitor.email }}</td>
-                                        <td class="min-width">{{ visitor.mobile_phone }}</td>
-                                        <td class="min-width">{{ visitor.organization }}</td>
-                                        <!-- Add more fields as needed -->
-                                      </tr>
+                                      
                                     {% empty %}
                                       <tr>
                                         <td colspan="5">No visitors found.</td>

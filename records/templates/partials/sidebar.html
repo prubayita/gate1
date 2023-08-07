@@ -38,11 +38,11 @@
             <li>
               <a href="{% url 'records:visitors' %}" {% if request.path == "/visitor-list/" %} class="active" {% endif %}> Waiting List </a>
             </li>
-            {% endif %}
-            {% if request.user.groups.all.0.name == 'Supervisor'  %}
             <li>
               <a href="{% url 'records:movements' %}" {% if request.path == "/movements/" %} class="active" {% endif %}> Movement </a>
             </li>
+            {% endif %}
+            {% if request.user.groups.all.0.name == 'Supervisor'  %}
             <li>
               <a href="{% url 'records:all_visitors' %}" {% if request.path == "/all-visitors/" %} class="active" {% endif %}> All Visitors </a>
             </li>

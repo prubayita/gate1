@@ -154,6 +154,34 @@
                 <h1 class="mb-10">Movements</h1>
                 <p class="text-sm mb-20"></p>
                 <div class="table-wrapper table-responsive">
+                  <!--for qr test-->
+                 
+                    <button id="checkoutButton2" class="main-btn active-btn rounded-full btn-hover btn-sm">QR Checkout</button>
+             
+                  <div class="modal" id="checkoutModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Checkout Visitor</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                      <!--Qr Code Scanner-->
+                                <div id="reader" width="300px"></div><br>
+                                <input type="text" id="visitorIdInput" class="form-control visually-hidden" placeholder="Visitor ID">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" id="checkoutConfirmButton" class="btn btn-primary">Checkout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                  
+                 
                    <!-- Add a new section for the checkout button and popup -->
                   <div class="checkout-section checkbt">
                     <button id="checkoutButton" class="main-btn active-btn rounded-full btn-hover btn-sm">Checkout</button>
@@ -200,8 +228,13 @@
                     </thead>
                     <tbody>
                       {% for movement in movements %}
-                      <tr data-visitor-id="{{ movement.visitor.id_passport_nbr }}">
-                        <td class="min-width">{{ movement.visitor.first_name }}</td>
+                    <tr>
+                      <td>
+                        <a href="#" class="open-qr-popup" data-visitor-id="{{ movement.visitor.id_passport_nbr }}">
+                          {{ movement.visitor.first_name }} {{ movement.visitor.surname }}
+                        </a>
+                      </td>
+                      </td>
                         <td class="min-width">{{ movement.visitor.id_passport_nbr}}</td>
                         <td class="min-width">{{ movement.visitor.email }}</td>
                         <td class="min-width">{{ movement.visitor.mobile_phone }}</td>
@@ -233,6 +266,28 @@
     <!-- </div> -->
     </div>
     </div>
+    <!-- HTML code for the QR code popup -->
+    <div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="qrCodeModalLabel">Visitor QR Code</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <img id="qrCodeImg" src="" alt="QR Code" class="img-fluid">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <!-- Add this button after the QR code image -->
+            <button id="printButton" class="btn btn-primary">Print</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 </section>
 </main>
 
