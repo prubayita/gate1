@@ -85,8 +85,10 @@ def record_visitor(request):
             mobile_phone=form_data['mobile_phone'],
         )
         waitingList.save()
+        messages.success(request, 'Visitor recorded successfully.')
 
         return redirect('records:record_visitor')
+    
 
     return render(request, 'records/test.html', {'visitors_list': visitors_list})
 
@@ -154,7 +156,6 @@ def manual_checkout(request):
 def visitor_list(request):
     # Fetch the list of users
     users = User.objects.all()
-
     waitinglist = WaitingList.objects.all().values()
     cards = Card.objects.all().values()
     template = loader.get_template('records/visitor_list.html')
@@ -258,12 +259,12 @@ def delete_waiting(request, visitor_id):
     log_entry.save()
     if request.method == 'POST':
         waiting_list.delete()
+        messages.error(request, 'Visitor declined successfully.')
         return redirect('records:visitors')  # Redirect to the list of visitors after successful deletion
 
     
     # You can also handle the case when the request method is not POST, e.g., show a confirmation page.
     # In this example, it simply redirects to the list of visitors.
-    messages.success(request, 'Visitor declined successfully.')
     return redirect('records:visitors')
 
 @login_required
