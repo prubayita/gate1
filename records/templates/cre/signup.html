@@ -100,6 +100,17 @@
                           <input type="password" id="password" name="password" placeholder="Password" />
                         </div>
                       </div>
+                      <div class="col-12">
+                        <div class="input-style-1">
+                          <label>Re-enter Password</label>
+                          <input
+                            type="password"
+                            id="reenter_password"
+                            name="reenter_password"
+                            placeholder="Re-enter Password"
+                          />
+                        </div>
+                      </div>
                       <!-- end col -->
                       
                       <!-- end col -->
@@ -196,5 +207,30 @@
     <script src="{% static 'assets/js/moment.min.js' %}"></script>
     <script src="{% static 'assets/js/polyfill.js' %}"></script>
     <script src="{% static 'assets/js/main.js' %}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const passwordInput = document.querySelector('#password');
+        const reenterPasswordInput = document.querySelector('#reenter_password');
+    
+        form.addEventListener('submit', function (event) {
+          const password = passwordInput.value;
+          const reenterPassword = reenterPasswordInput.value;
+    
+          if (password !== reenterPassword) {
+            alert("Passwords don't match. Please re-enter.");
+            event.preventDefault();
+          }
+    
+          if (password.length < 8 || !/[!@#$%^&*]/.test(password)) {
+            alert(
+              'Password must be at least 8 characters long and contain a symbol (!@#$%^&*)'
+            );
+            event.preventDefault();
+          }
+        });
+      });
+    </script>
+    
   </body>
 </html>
