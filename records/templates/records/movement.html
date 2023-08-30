@@ -240,8 +240,8 @@
                         <td class="min-width">{{ movement.visitor.mobile_phone }}</td>
                         <td class="min-width">{{ movement.visitor.organization }}</td>
                         <td class="min-width">{{ movement.card.name }}</td>
-                        <td class="min-width">{{ movement.time_in }}</td>
-                        <td class="min-width">{{ movement.time_out|default_if_none:"Not checked out" }}</td>
+                        <td class="min-width">{{ movement.time_in|date:"d/m/Y, H:i" }}</td>
+                        <td class="min-width">{{ movement.time_out|default_if_none:"Not checked out" |date:"d/m/Y, H:i" }}</td>
                         <td class="min-width">
                           {% if movement.time_out %}
                           <button class="btn rounded-md btn-danger btn-sm" disabled>Checked Out</button>

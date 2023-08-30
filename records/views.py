@@ -44,7 +44,7 @@ def login(request):
         else:
             messages.error(request, 'Invalid username or password.')
             return redirect('records:login')
-    return render(request, 'cre/login.html')
+    return render(request, 'cre/login2.html')
 
 def logout_view(request):
     logout(request)
@@ -87,7 +87,7 @@ def record_visitor(request):
         waitingList.save()
         messages.success(request, 'Visitor recorded successfully.')
 
-        return redirect('records:record_visitor')
+        return redirect('records:visitors')
     
 
     return render(request, 'records/test.html', {'visitors_list': visitors_list})
@@ -293,6 +293,8 @@ def movements(request):
     context = {'movements': movements}
 
     return render(request, 'records/movement.html', context)
+
+
 def signup(request):
     if request.method == 'POST':
         username = request.POST['username']
