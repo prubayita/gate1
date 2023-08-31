@@ -302,34 +302,38 @@ def signup(request):
         last_name = request.POST['last_name']
         email = request.POST['email']
         password = request.POST['password']
-        role = request.POST['role']  # Get the selected role from the dropdown
-        
-        # Create a new user in the database
-        try:
-            user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
-            
-            # Set the user role based on the selected role in the dropdown
-            if role == 'admin':
-                user.is_staff = True
-                user.is_superuser = True
-            elif role == 'security':
-                user.groups.add(Group.objects.get(name='Security'))  
-            elif role == 'supervisor':
-                user.groups.add(Group.objects.get(name='Supervisor'))
-            
-            user.save()
+        # role = request.POST['role']  # Get the selected role from the dropdown
 
-            # Redirect to the desired page after successful signup (e.g., login page)
-            return redirect('records:login')
-        except Exception as e:
-            messages.error(request, 'Error creating user. Please try again.')
-            # Redirect back to the signup page
-            return redirect('records:signup')
+        user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
+        user.save()
+        # Redirect to the desired page after successful signup (e.g., login page)
+        return redirect('records:login')
+        # Create a new user in the database
+        # try:
+        #     user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
+            
+        #     # Set the user role based on the selected role in the dropdown
+        #     if role == 'admin':
+        #         user.is_staff = True
+        #         user.is_superuser = True
+        #     elif role == 'security':
+        #         user.groups.add(Group.objects.get(name='Security'))  
+        #     elif role == 'supervisor':
+        #         user.groups.add(Group.objects.get(name='Supervisor'))
+            
+        #     user.save()
+
+        #     # Redirect to the desired page after successful signup (e.g., login page)
+        #     return redirect('records:login')
+        # except Exception as e:
+        #     messages.error(request, 'Error creating user. Please try again.')
+        #     # Redirect back to the signup page
+        #     return redirect('records:signup')
 
     return render(request, 'cre/signup.html')
 
 @login_required
-# @group_required('Supervisor')
+@group_required('Supervisor')
 def logs(request):
     # Query the Log model and order the logs by timestamp in descending order (most recent first)
     logs = Log.objects.all().order_by('-timestamp')
@@ -338,6 +342,7 @@ def logs(request):
     return render(request, 'records/logs.html', context)
 
 @login_required
+@group_required('Supervisor')
 def all_visitors(request):
     visitors_list2 = Visitor.objects.all().values()
     visitors_list2 = json.dumps(list(visitors_list2))
