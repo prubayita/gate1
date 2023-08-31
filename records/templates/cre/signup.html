@@ -94,10 +94,16 @@
                         </div>
                       </div>
                       <!-- end col -->
-                      <div class="col-12">
-                        <div class="input-style-1">
-                          <label>Password</label>
-                          <input type="password" id="password" name="password" placeholder="Password" />
+                      <div class="input-style-1">
+                        <label>Password</label>
+                        <div class="password-input">
+                          <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Password"
+                          />
+                          <i id="togglePassword" class="lni lni-eye"></i>
                         </div>
                       </div>
                       <div class="col-12">
@@ -109,6 +115,7 @@
                             name="reenter_password"
                             placeholder="Re-enter Password"
                           />
+                          <i id="togglePassword2" class="lni lni-eye"></i>
                         </div>
                       </div>
                       <!-- end col -->
@@ -231,6 +238,38 @@
         });
       });
     </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const passwordInput = document.querySelector('#password');
+        const passwordInput2 = document.querySelector('#reenter_password');
+        const togglePasswordButton = document.querySelector('#togglePassword');
+        const togglePasswordButton2 = document.querySelector('#togglePassword2');
+    
+        togglePasswordButton.addEventListener('click', function () {
+          if (passwordInput2.type === 'password') {
+            passwordInput.type = 'text';
+            togglePasswordButton.classList.remove('lni-eye');
+            togglePasswordButton.classList.add('lni-eye-off');
+          } else {
+            passwordInput.type = 'password';
+            togglePasswordButton.classList.remove('lni-eye-off');
+            togglePasswordButton.classList.add('lni-eye');
+          }
+        });
+        togglePasswordButton2.addEventListener('click', function () {
+          if (passwordInput2.type === 'password') {
+            passwordInput2.type = 'text';
+            togglePasswordButton2.classList.remove('lni-eye');
+            togglePasswordButton2.classList.add('lni-eye-off');
+          } else {
+            passwordInput2.type = 'password';
+            togglePasswordButton2.classList.remove('lni-eye-off');
+            togglePasswordButton2.classList.add('lni-eye');
+          }
+        });
+      });
+    </script>
+    
     
   </body>
 </html>
