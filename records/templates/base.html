@@ -254,20 +254,21 @@
       // Function to extract data from the scanned card
 function extractDataFromCard(cardData) {
   // Extract ID/Passport Number (first 21 characters)
+<<<<<<< HEAD
   const idPassportNumber = cardData.slice(0, 71);
+=======
+  const idPassportNumber = cardData;
+>>>>>>> 968dc1bd370e33296dd1b3cc4114494a78abdf61
 
-  // Extract First Name (characters 32 to 71)
-  const firstName = cardData.slice(31, 71); // Updated slice to include up to 71
 
   // Set the extracted data into the form fields
   document.getElementById('id_passport_nbr').value = idPassportNumber;
-  document.getElementById('first_name').value = firstName;
 }
     
       // Add an event listener to the ID/Passport Number field for input
       document.getElementById('id_passport_nbr').addEventListener('input', function () {
         // Get the entered data from the input field
-        const scannedCardData = this.value;
+        const scannedCardData = this.value.slice(0, 21);
     
         // Call the function to extract and populate data
         extractDataFromCard(scannedCardData);
