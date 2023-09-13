@@ -269,25 +269,18 @@
         // Get the entered data from the input field
         const scannedCardData = this.value;
     
-        // Filter out unwanted characters (allow only letters and numbers)
-        const filteredData = scannedCardData.replace(/[^a-zA-Z0-9]/g, '');
-    
-        // Update the input field with the filtered data
-        this.value = filteredData;
-    
         // Call the function to extract and populate data
-        extractDataFromCard(filteredData);
+        extractDataFromCard(scannedCardData);
       });
     
-      // Add an event listener to prevent the Tab key from moving focus
+      // Add an event listener to prevent unwanted key presses
       document.getElementById('id_passport_nbr').addEventListener('keydown', function (event) {
-        // Check if the pressed key is the Tab key (key code 9)
-        if (event.keyCode === 9) {
-          event.preventDefault(); // Prevent the default action (focus move)
+        // Check if the pressed key is Enter (key code 13) or any function keys (key codes 112 to 123)
+        if (event.keyCode === 13 || (event.keyCode >= 112 && event.keyCode <= 123)) {
+          event.preventDefault(); // Prevent the default action
         }
       });
     </script>
-    
     
 
     <!---populate register form -->
