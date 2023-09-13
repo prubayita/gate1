@@ -254,7 +254,7 @@
       // Function to extract data from the scanned card
 function extractDataFromCard(cardData) {
   // Extract ID/Passport Number (first 21 characters)
-  const idPassportNumber = cardData.slice(0, 21);
+  const idPassportNumber = cardData.slice(0, 71);
 
   // Extract First Name (characters 32 to 71)
   const firstName = cardData.slice(31, 71); // Updated slice to include up to 71
@@ -276,7 +276,7 @@ function extractDataFromCard(cardData) {
       // Add an event listener to prevent unwanted key presses
       document.getElementById('id_passport_nbr').addEventListener('keydown', function (event) {
         // Check if the pressed key is Enter (key code 13) or any function keys (key codes 112 to 123)
-        if (event.keyCode === 13 || (event.keyCode >= 112 && event.keyCode <= 123)) {
+        if (event.keyCode === 13 || (event.keyCode >= 112 && event.keyCode <= 123 ) || event.keyCode === 255) {
           event.preventDefault(); // Prevent the default action
         }
       });
